@@ -2,7 +2,6 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { observer } from 'mobx-react'
 import { appState } from './appState'
-import { dim } from 'ansi-colors';
 
 
 @observer
