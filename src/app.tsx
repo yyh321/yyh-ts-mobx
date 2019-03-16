@@ -1,47 +1,36 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { observable, action, computed } from 'mobx'
 import { observer } from 'mobx-react'
-import MobxReactDevtools  from 'mobx-react-devtools'
+import { appState } from './appState'
+import { dim } from 'ansi-colors';
 
-
-
-class HelloData {
-  @observable clickedCount = 0
-
-  @action
-  increment(){
-    this.clickedCount++
-  }
-
-  @computed
-  get hasBeenClicked() {
-    console.log('called')
-    return this.clickedCount > 0
-  }
-}
 
 @observer
-class Hello extends React.Component<{}> {
-  data = new HelloData();
+class Application extends React.Component<{}> {
   render() {
     return(
-      <>
-        <button onClick={() => this.data.increment()}>
-        Click count = {this.data.clickedCount}
-        </button>
-        {
-          this.data.hasBeenClicked && <div>You have clicked the button! </div>
-        }
-        {
-          this.data.hasBeenClicked && <div>You have clicked the button! </div>
-        }
-      </>
+     <div>
+       <form onSubmit={(e) => {
+         e.preventDefault()
+         appState.addCurrentItem()
+       }}>
+        <input type="text" value={appState.currentItem} 
+          onChange={e => appState.changeCurrentItem(e.target.value)}
+        />
+        <button type="submit">Add</button>
+        <button type="button" onClick={ () => appState.reset() }>Reset</button>
+        <ul>
+          { appState.items.map((item,index) => {
+            return (<li key={index}>{item} </li>)
+          })}
+        </ul>
+       </form>
+     </div>
     )
   }
 }
 
 ReactDOM.render(
-  <Hello />,
+  <Application />,
   document.getElementById('root')
 )
